@@ -3,8 +3,8 @@ spring:
     name: order-processing-service
 
 
+
   data:
     mongodb:
-      host: localhost
-      port: 27017
-      database: order_processing_db
+      uri: mongodb://localhost:27017/order_processing_db?maxPoolSize=50&minPoolSize=5&connectTimeoutMS=10000&socketTimeoutMS=0&maxIdleTimeMS=300000
+
