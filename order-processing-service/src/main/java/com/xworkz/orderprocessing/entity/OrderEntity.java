@@ -12,7 +12,6 @@ import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.time.LocalDateTime;
 
-
 @Document(collection = "orders")
 @Data
 @Builder
@@ -20,22 +19,18 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 public class OrderEntity {
 
+  @Id private String id;
 
-    @Id
-    private String id;
+  @NotBlank(message = "Customer name is required")
+  private String customerName;
 
-    @NotBlank(message = "Customer name is required")
-    private String customerName;
+  @NotNull(message = "Order amount is required")
+  @Min(value = 1, message = "Amount must be greater than 0")
+  private Double amount;
 
-    @NotNull(message = "Order amount is required")
-    @Min(value = 1, message = "Amount must be greater than 0")
-    private Double amount;
+  @NotBlank(message = "Status is required")
+  private String status;
 
-    @NotBlank(message = "Status is required")
-    private String status;
-
-    private LocalDateTime createdAt;
-    private LocalDateTime updatedAt;
-
-
+  private LocalDateTime createdAt;
+  private LocalDateTime updatedAt;
 }
