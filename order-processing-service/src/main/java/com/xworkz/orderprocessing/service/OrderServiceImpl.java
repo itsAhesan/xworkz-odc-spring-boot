@@ -10,6 +10,10 @@ import com.xworkz.orderprocessing.repository.OrderRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
@@ -190,66 +194,21 @@ public class OrderServiceImpl implements OrderService{
         log.info("Bulk delete successful for {} orders", ids.size());
     }
 
-
-
-
-   /* @Override
-    public OrderResponseDto createOrder(OrderRequestDto dto) {
-        log.info("Creating order for customer: {}", dto.getCustomerName());
-
-       *//* if (repository.existsByCustomerNameAndAmount(dto.getCustomerName(), dto.getAmount())) {
-            throw new DuplicateResourceException("Order already exists for this customer and amount");
-        }
-*//*
-
-
-        OrderEntity entity = new OrderEntity();
-        BeanUtils.copyProperties(dto, entity);
-        entity.setCreatedAt(LocalDateTime.now());
-        entity.setUpdatedAt(LocalDateTime.now());
-
-
-        OrderEntity saved = repository.save(entity);
-
-        log.info("Order created successfully with id: {}", saved.getId());
-
-        return convertToResponse(entity);
-    }
-
     @Override
-    public OrderResponseDto getOrder(String id) {
+    public Page<OrderResponseDto> getOrdersWithPagination(int page, int size, String sortBy, String direction) {
+        log.info("Fetching paginated orders page={}, size={}, sortBy={}, direction={}",
+                page, size, sortBy, direction);
 
-        OrderEntity entity = repository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Order not found with id: " + id));
+        Sort sort = direction.equalsIgnoreCase("desc")
+                ? Sort.by(sortBy).descending()
+                : Sort.by(sortBy).ascending();
 
-        return null;
-    }
+        Pageable pageable = PageRequest.of(page, size, sort);
 
-    @Override
-    public List<OrderResponseDto> getAllOrders() {
-        return List.of();
-    }
+        Page<OrderEntity> entityPage = repository.findAll(pageable);
 
-    @Override
-    public OrderResponseDto updateOrder(String id, OrderRequestDto dto) {
-        return null;
-    }
-
-    @Override
-    public void deleteOrder(String id) {
-
+        return entityPage.map(OrderMapper::toResponse);
     }
 
 
-    private OrderResponseDto convertToResponse(OrderEntity entity) {
-
-        OrderResponseDto dto = new OrderResponseDto();
-        dto.setId(entity.getId());
-        dto.setCustomerName(entity.getCustomerName());
-        dto.setAmount(entity.getAmount());
-        dto.setStatus(entity.getStatus());
-        dto.setCreatedAt(entity.getCreatedAt());
-        dto.setUpdatedAt(entity.getUpdatedAt());
-
-        return dto;
-    }*/
 }

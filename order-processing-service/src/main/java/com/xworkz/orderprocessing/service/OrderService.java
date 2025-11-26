@@ -3,6 +3,7 @@ package com.xworkz.orderprocessing.service;
 import com.xworkz.orderprocessing.dto.OrderRequestDto;
 import com.xworkz.orderprocessing.dto.OrderResponseDto;
 import jakarta.validation.Valid;
+import org.springframework.data.domain.Page;
 
 import java.util.List;
 
@@ -24,4 +25,6 @@ public interface OrderService {
     void deleteBulkOrders(List<String> ids);
 
     List<OrderResponseDto> getBulkOrders(List<String> ids);
+
+    Page<OrderResponseDto> getOrdersWithPagination(int page, int size, String sortBy, String direction);
 }
