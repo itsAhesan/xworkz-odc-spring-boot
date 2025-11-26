@@ -6,6 +6,7 @@ import com.xworkz.orderprocessing.service.OrderService;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -79,5 +80,19 @@ public class OrderController {
         log.info("API Call: Bulk Get Orders");
         return ResponseEntity.ok(service.getBulkOrders(ids));
     }
+
+
+
+    @GetMapping("/pagination")
+    public ResponseEntity<Page<OrderResponseDto>> getPaginatedOrders(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "createdAt") String sortBy,
+            @RequestParam(defaultValue = "desc") String direction
+    ) {
+        log.info("API Call: Get Orders with Pagination");
+        return ResponseEntity.ok(service.getOrdersWithPagination(page, size, sortBy, direction));
+    }
+
 
 }
